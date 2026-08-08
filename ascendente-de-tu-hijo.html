@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descubre el Ascendente de tu hijo o hija · Alaia Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FBF1EC;
+    --card: #FFFDFB;
+    --ink: #4A2436;
+    --ink-soft: #7A5468;
+    --rose: #C97B84;
+    --rose-deep: #A85566;
+    --blush: #F3D9DC;
+    --gold: #C9A15B;
+    --line: #EAD6D2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .wash{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .hero{
+    position:relative;
+    padding:76px 24px 64px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero-inner{position:relative; z-index:1; max-width:640px; margin:0 auto;}
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--rose-deep);
+    margin-bottom:18px;
+    font-weight:600;
+  }
+  .hero h1{
+    font-size:clamp(32px, 5vw, 48px);
+    line-height:1.12;
+    margin:0 0 20px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--rose-deep);
+  }
+  .hero p{
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    max-width:480px;
+    margin:0 auto 34px;
+  }
+  .cta-btn{
+    appearance:none;
+    border:none;
+    background:var(--rose-deep);
+    color:#fff;
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    padding:15px 30px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:transform .18s ease, background .18s ease;
+  }
+  .cta-btn:hover{ background:var(--ink); transform:translateY(-1px); }
+  .cta-btn:active{ transform:translateY(0); }
+
+  main{max-width:520px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:32px 28px;
+    box-shadow:0 18px 40px -24px rgba(74,36,54,.35);
+  }
+  .card h2{
+    font-size:23px;
+    margin:0 0 6px;
+  }
+  .card .sub{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin:0 0 26px;
+    line-height:1.5;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:7px;
+  }
+  .field{ margin-bottom:20px; }
+  .hint{ font-size:12.5px; color:var(--ink-soft); margin-top:6px; line-height:1.45; }
+  input[type=text], input[type=date], input[type=time], input[type=number], select{
+    width:100%;
+    font-family:'Manrope', sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  input:focus, select:focus{ border-color:var(--rose); }
+  .manual-fields{
+    display:none;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:14px;
+    padding:14px;
+    background:var(--bg);
+    border-radius:14px;
+  }
+  .manual-fields.show{ display:grid; }
+  .manual-fields .field{ margin-bottom:0; grid-column: span 1; }
+  .manual-fields .field.full{ grid-column: 1 / -1; }
+
+  .submit-btn{
+    width:100%;
+    margin-top:6px;
+    appearance:none;
+    border:none;
+    background:var(--rose-deep);
+    color:#fff;
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    padding:15px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:background .18s ease;
+  }
+  .submit-btn:hover{ background:var(--ink); }
+  .error{
+    color:var(--rose-deep);
+    font-size:13px;
+    margin-top:10px;
+    display:none;
+  }
+
+  /* Result */
+  #result{
+    display:none;
+    margin-top:28px;
+  }
+  .reveal{
+    background:linear-gradient(135deg, var(--blush), var(--card) 60%);
+    border-radius:22px;
+    padding:36px 28px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    clip-path: inset(0 100% 0 0);
+    animation: brush 1.1s cubic-bezier(.65,0,.35,1) forwards;
+  }
+  @keyframes brush{ to{ clip-path: inset(0 0 0 0); } }
+  .glyph{
+    font-family:'Fraunces', serif;
+    font-size:52px;
+    line-height:1;
+    color:var(--rose-deep);
+    margin-bottom:10px;
+  }
+  .result-name{
+    font-size:12.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .result-sign{
+    font-size:30px;
+    margin:0 0 16px;
+  }
+  .result-blurb{
+    font-size:15px;
+    line-height:1.65;
+    color:var(--ink);
+    text-align:left;
+  }
+  .result-degree{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:16px;
+  }
+  .footer-note{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+  .footer-note a{ color:var(--rose-deep); font-weight:600; text-decoration:none; }
+  .footer-note a:hover{ text-decoration:underline; }
+
+  footer{
+    text-align:center;
+    padding:36px 24px 50px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    position:relative; z-index:1;
+  }
+
+  @media (max-width:420px){
+    .hero{padding:56px 18px 48px;}
+    .card{padding:26px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <svg class="wash" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-50,120 C150,20 350,180 550,80 C700,10 850,90 900,60 L900,-50 L-50,-50 Z" fill="#F3D9DC" opacity="0.7"/>
+    <circle cx="90" cy="90" r="2.5" fill="#C9A15B" opacity="0.7"/>
+    <circle cx="650" cy="60" r="2" fill="#C9A15B" opacity="0.6"/>
+    <circle cx="720" cy="140" r="3" fill="#C97B84" opacity="0.5"/>
+    <circle cx="200" cy="40" r="1.8" fill="#C9A15B" opacity="0.5"/>
+    <circle cx="450" cy="30" r="2.2" fill="#C97B84" opacity="0.5"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="eyebrow">Alaia Artist · Ascendentes</div>
+    <h1>La primera huella con la que tu hija o hijo <em>se muestra al mundo</em></h1>
+    <p>El ascendente es el gesto espontáneo con el que un niño se presenta antes de decir una palabra. Con la fecha, hora y lugar de nacimiento, lo descubrimos juntos.</p>
+    <a href="#form"><button class="cta-btn">Descubrir su ascendente</button></a>
+  </div>
+</div>
+
+<main>
+  <div class="card" id="form">
+    <h2>Datos de nacimiento</h2>
+    <p class="sub">La hora exacta es la que más importa: el ascendente cambia aproximadamente cada dos horas.</p>
+
+    <div class="field">
+      <label for="childName">Nombre del niño o niña (opcional)</label>
+      <input type="text" id="childName" placeholder="Ej. Sofía">
+    </div>
+
+    <div class="field">
+      <label for="birthDate">Fecha de nacimiento</label>
+      <input type="date" id="birthDate">
+    </div>
+
+    <div class="field">
+      <label for="birthTime">Hora de nacimiento</label>
+      <input type="time" id="birthTime">
+      <div class="hint">Revisa el registro civil o la cartilla de nacimiento — ahí suele quedar anotada la hora exacta.</div>
+    </div>
+
+    <div class="field">
+      <label for="citySelect">Lugar de nacimiento</label>
+      <select id="citySelect">
+        <option value="">Selecciona una ciudad…</option>
+        <optgroup label="Colombia">
+          <option value="bogota">Bogotá</option>
+          <option value="medellin">Medellín</option>
+          <option value="cali">Cali</option>
+          <option value="barranquilla">Barranquilla</option>
+          <option value="cartagena">Cartagena</option>
+          <option value="bucaramanga">Bucaramanga</option>
+          <option value="pereira">Pereira</option>
+          <option value="manizales">Manizales</option>
+          <option value="cucuta">Cúcuta</option>
+          <option value="ibague">Ibagué</option>
+          <option value="santamarta">Santa Marta</option>
+          <option value="villavicencio">Villavicencio</option>
+        </optgroup>
+        <optgroup label="México y Norteamérica">
+          <option value="cdmx">Ciudad de México</option>
+          <option value="guadalajara">Guadalajara</option>
+          <option value="monterrey">Monterrey</option>
+          <option value="tijuana">Tijuana*</option>
+          <option value="cancun">Cancún</option>
+          <option value="nuevayork">Nueva York, EE.UU.*</option>
+          <option value="losangeles">Los Ángeles, EE.UU.*</option>
+          <option value="chicago">Chicago, EE.UU.*</option>
+          <option value="miami">Miami, EE.UU.*</option>
+          <option value="houston">Houston, EE.UU.*</option>
+          <option value="toronto">Toronto, Canadá*</option>
+          <option value="vancouver">Vancouver, Canadá*</option>
+          <option value="montreal">Montreal, Canadá*</option>
+          <option value="calgary">Calgary, Canadá*</option>
+          <option value="nuuk">Nuuk, Groenlandia*</option>
+          <option value="hamilton_bermuda">Hamilton, Bermudas*</option>
+        </optgroup>
+        <optgroup label="Centroamérica">
+          <option value="sanjose">San José, Costa Rica</option>
+          <option value="panama">Ciudad de Panamá</option>
+          <option value="guatemala">Ciudad de Guatemala</option>
+          <option value="sansalvador">San Salvador</option>
+          <option value="tegucigalpa">Tegucigalpa</option>
+          <option value="managua">Managua</option>
+          <option value="belmopan">Belmopán, Belice</option>
+        </optgroup>
+        <optgroup label="El Caribe">
+          <option value="lahabana">La Habana, Cuba*</option>
+          <option value="kingston">Kingston, Jamaica</option>
+          <option value="puertopríncipe">Puerto Príncipe, Haití*</option>
+          <option value="santodomingo">Santo Domingo, R. Dominicana</option>
+          <option value="sanjuanpr">San Juan, Puerto Rico</option>
+          <option value="nassau">Nassau, Bahamas*</option>
+          <option value="puertoespaña">Puerto España, Trinidad y Tobago</option>
+          <option value="bridgetown">Bridgetown, Barbados</option>
+          <option value="oranjestad">Oranjestad, Aruba</option>
+          <option value="willemstad">Willemstad, Curazao</option>
+          <option value="charlotteamalie">Charlotte Amalie, Islas Vírgenes EE.UU.</option>
+          <option value="roadtown">Road Town, Islas Vírgenes Británicas</option>
+          <option value="georgetown_cayman">George Town, Islas Caimán</option>
+          <option value="pointeapitre">Pointe-à-Pitre, Guadalupe</option>
+          <option value="fortdefrance">Fort-de-France, Martinica</option>
+          <option value="castries">Castries, Santa Lucía</option>
+          <option value="stgeorges">St. George's, Granada</option>
+          <option value="roseau">Roseau, Dominica</option>
+          <option value="stjohns">St. John's, Antigua y Barbuda</option>
+          <option value="basseterre">Basseterre, San Cristóbal y Nieves</option>
+          <option value="kingstownsvg">Kingstown, San Vicente y las Granadinas</option>
+          <option value="cockburntown">Cockburn Town, Turcas y Caicos*</option>
+          <option value="thevalley">The Valley, Anguila</option>
+          <option value="brades">Brades, Montserrat</option>
+        </optgroup>
+        <optgroup label="Sudamérica">
+          <option value="buenosaires">Buenos Aires, Argentina</option>
+          <option value="cordoba">Córdoba, Argentina</option>
+          <option value="mendoza">Mendoza, Argentina</option>
+          <option value="lapaz">La Paz, Bolivia</option>
+          <option value="santacruz">Santa Cruz de la Sierra, Bolivia</option>
+          <option value="saopaulo">São Paulo, Brasil*</option>
+          <option value="riodejaneiro">Río de Janeiro, Brasil*</option>
+          <option value="brasilia">Brasilia, Brasil*</option>
+          <option value="salvador">Salvador, Brasil*</option>
+          <option value="manaus">Manaus, Brasil</option>
+          <option value="santiago">Santiago de Chile*</option>
+          <option value="quito">Quito, Ecuador</option>
+          <option value="guayaquil">Guayaquil, Ecuador</option>
+          <option value="georgetown_guyana">Georgetown, Guyana</option>
+          <option value="asuncion">Asunción, Paraguay*</option>
+          <option value="lima">Lima, Perú</option>
+          <option value="arequipa">Arequipa, Perú</option>
+          <option value="paramaribo">Paramaribo, Surinam</option>
+          <option value="montevideo">Montevideo, Uruguay*</option>
+          <option value="caracas">Caracas, Venezuela</option>
+          <option value="maracaibo">Maracaibo, Venezuela</option>
+          <option value="valencia_ve">Valencia, Venezuela</option>
+          <option value="cayena">Cayena, Guayana Francesa</option>
+        </optgroup>
+        <optgroup label="Europa / Otros">
+          <option value="madrid">Madrid*</option>
+        </optgroup>
+        <option value="otra">Otra ciudad del mundo (ingresar manualmente)</option>
+      </select>
+      <div class="hint">*Ciudades con horario de verano: si el nacimiento fue en esa temporada, resta 1 hora a la hora ingresada.</div>
+    </div>
+
+    <div class="manual-fields" id="manualFields">
+      <div class="field full">
+        <label for="manualLat">Latitud</label>
+        <input type="number" step="any" id="manualLat" placeholder="Ej. 6.25">
+      </div>
+      <div class="field full">
+        <label for="manualLon">Longitud</label>
+        <input type="number" step="any" id="manualLon" placeholder="Ej. -75.56">
+      </div>
+      <div class="field full">
+        <label for="manualUtc">Huso horario (UTC)</label>
+        <input type="number" step="any" id="manualUtc" placeholder="Ej. -5">
+        <div class="hint">Puedes buscar "latitud longitud [ciudad]" y "huso horario UTC [ciudad]" en internet.</div>
+      </div>
+    </div>
+
+    <div class="error" id="errorMsg">Por favor completa la fecha, la hora y el lugar de nacimiento.</div>
+
+    <button class="submit-btn" id="calcBtn" style="margin-top:22px;">Revelar el ascendente</button>
+  </div>
+
+  <div id="result">
+    <div class="reveal">
+      <div class="glyph" id="resGlyph">☉</div>
+      <div class="result-name" id="resFor">Ascendente de Sofía</div>
+      <h3 class="result-sign" id="resSign">Ascendente en Leo</h3>
+      <div class="result-blurb" id="resBlurb"></div>
+      <div class="result-degree" id="resDegree"></div>
+    </div>
+    <div class="footer-note">
+      Este es un primer trazo — el ascendente se lee junto con todo el mapa natal. Si quieres profundizar en lo que significa para el camino emocional de tu hija o hijo, el libro <strong>«Ascendentes»</strong> fue pensado exactamente para eso.
+      <br><br>
+      <a href="#form" onclick="document.getElementById('result').style.display='none'; return true;">Calcular para otro niño o niña →</a>
+    </div>
+  </div>
+</main>
+
+<footer>Hecho con cariño por Alaia Artist · Trazos de Consciencia</footer>
+
+<script>
+const CITIES = {
+  bogota:      { lat: 4.7110,  lon: -74.0721, utc: -5 },
+  medellin:    { lat: 6.2442,  lon: -75.5812, utc: -5 },
+  cali:        { lat: 3.4516,  lon: -76.5320, utc: -5 },
+  barranquilla:{ lat: 10.9639, lon: -74.7964, utc: -5 },
+  cartagena:   { lat: 10.3910, lon: -75.4794, utc: -5 },
+  bucaramanga: { lat: 7.1193,  lon: -73.1227, utc: -5 },
+  pereira:     { lat: 4.8143,  lon: -75.6946, utc: -5 },
+  manizales:   { lat: 5.0689,  lon: -75.5174, utc: -5 },
+  cucuta:      { lat: 7.8939,  lon: -72.5078, utc: -5 },
+  ibague:      { lat: 4.4389,  lon: -75.2322, utc: -5 },
+  santamarta:  { lat: 11.2404, lon: -74.1990, utc: -5 },
+  villavicencio:{lat: 4.1420,  lon: -73.6266, utc: -5 },
+  cdmx:        { lat: 19.4326, lon: -99.1332, utc: -6 },
+  guadalajara: { lat: 20.6597, lon: -103.3496, utc: -6 },
+  monterrey:   { lat: 25.6866, lon: -100.3161, utc: -6 },
+  tijuana:     { lat: 32.5149, lon: -117.0382, utc: -8 },
+  cancun:      { lat: 21.1619, lon: -86.8515, utc: -5 },
+  nuevayork:   { lat: 40.7128, lon: -74.0060, utc: -5 },
+  losangeles:  { lat: 34.0522, lon: -118.2437, utc: -8 },
+  chicago:     { lat: 41.8781, lon: -87.6298, utc: -6 },
+  miami:       { lat: 25.7617, lon: -80.1918, utc: -5 },
+  houston:     { lat: 29.7604, lon: -95.3698, utc: -6 },
+  toronto:     { lat: 43.6532, lon: -79.3832, utc: -5 },
+  vancouver:   { lat: 49.2827, lon: -123.1207, utc: -8 },
+  montreal:    { lat: 45.5017, lon: -73.5673, utc: -5 },
+  calgary:     { lat: 51.0447, lon: -114.0719, utc: -7 },
+  nuuk:        { lat: 64.1836, lon: -51.7214, utc: -3 },
+  hamilton_bermuda:{ lat: 32.2949, lon: -64.7859, utc: -4 },
+
+  sanjose:     { lat: 9.9281,  lon: -84.0907, utc: -6 },
+  panama:      { lat: 8.9824,  lon: -79.5199, utc: -5 },
+  guatemala:   { lat: 14.6349, lon: -90.5069, utc: -6 },
+  sansalvador: { lat: 13.6929, lon: -89.2182, utc: -6 },
+  tegucigalpa: { lat: 14.0723, lon: -87.1921, utc: -6 },
+  managua:     { lat: 12.1364, lon: -86.2514, utc: -6 },
+  belmopan:    { lat: 17.2510, lon: -88.7590, utc: -6 },
+
+  lahabana:        { lat: 23.1136, lon: -82.3666, utc: -5 },
+  kingston:        { lat: 17.9712, lon: -76.7936, utc: -5 },
+  "puertopríncipe":{ lat: 18.5944, lon: -72.3074, utc: -5 },
+  santodomingo:    { lat: 18.4861, lon: -69.9312, utc: -4 },
+  sanjuanpr:       { lat: 18.4655, lon: -66.1057, utc: -4 },
+  nassau:          { lat: 25.0343, lon: -77.3963, utc: -5 },
+  "puertoespaña":  { lat: 10.6549, lon: -61.5019, utc: -4 },
+  bridgetown:      { lat: 13.0969, lon: -59.6145, utc: -4 },
+  oranjestad:      { lat: 12.5246, lon: -70.0270, utc: -4 },
+  willemstad:      { lat: 12.1084, lon: -68.9335, utc: -4 },
+  charlotteamalie: { lat: 18.3419, lon: -64.9307, utc: -4 },
+  roadtown:        { lat: 18.4207, lon: -64.6199, utc: -4 },
+  georgetown_cayman:{ lat: 19.3133, lon: -81.2546, utc: -5 },
+  pointeapitre:    { lat: 16.2415, lon: -61.5330, utc: -4 },
+  fortdefrance:    { lat: 14.6161, lon: -61.0588, utc: -4 },
+  castries:        { lat: 14.0101, lon: -60.9875, utc: -4 },
+  stgeorges:       { lat: 12.0561, lon: -61.7488, utc: -4 },
+  roseau:          { lat: 15.3092, lon: -61.3794, utc: -4 },
+  stjohns:         { lat: 17.1274, lon: -61.8468, utc: -4 },
+  basseterre:      { lat: 17.3026, lon: -62.7177, utc: -4 },
+  kingstownsvg:    { lat: 13.1600, lon: -61.2248, utc: -4 },
+  cockburntown:    { lat: 21.4612, lon: -71.1419, utc: -5 },
+  thevalley:       { lat: 18.2170, lon: -63.0578, utc: -4 },
+  brades:          { lat: 16.7926, lon: -62.2093, utc: -4 },
+
+  buenosaires: { lat: -34.6037,lon: -58.3816, utc: -3 },
+  cordoba:     { lat: -31.4201,lon: -64.1888, utc: -3 },
+  mendoza:     { lat: -32.8908,lon: -68.8272, utc: -3 },
+  lapaz:       { lat: -16.5000,lon: -68.1500, utc: -4 },
+  santacruz:   { lat: -17.7833,lon: -63.1821, utc: -4 },
+  saopaulo:    { lat: -23.5505,lon: -46.6333, utc: -3 },
+  riodejaneiro:{ lat: -22.9068,lon: -43.1729, utc: -3 },
+  brasilia:    { lat: -15.7939,lon: -47.8828, utc: -3 },
+  salvador:    { lat: -12.9777,lon: -38.5016, utc: -3 },
+  manaus:      { lat: -3.1190, lon: -60.0217, utc: -4 },
+  santiago:    { lat: -33.4489,lon: -70.6693, utc: -4 },
+  quito:       { lat: -0.1807, lon: -78.4678, utc: -5 },
+  guayaquil:   { lat: -2.1962, lon: -79.8862, utc: -5 },
+  georgetown_guyana:{ lat: 6.8013, lon: -58.1551, utc: -4 },
+  asuncion:    { lat: -25.2637,lon: -57.5759, utc: -4 },
+  lima:        { lat: -12.0464,lon: -77.0428, utc: -5 },
+  arequipa:    { lat: -16.4090,lon: -71.5375, utc: -5 },
+  paramaribo:  { lat: 5.8520,  lon: -55.2038, utc: -3 },
+  montevideo:  { lat: -34.9011,lon: -56.1645, utc: -3 },
+  caracas:     { lat: 10.4806, lon: -66.9036, utc: -4 },
+  maracaibo:   { lat: 10.6427, lon: -71.6125, utc: -4 },
+  valencia_ve: { lat: 10.1621, lon: -68.0077, utc: -4 },
+  cayena:      { lat: 4.9224,  lon: -52.3135, utc: -3 },
+
+  madrid:      { lat: 40.4168, lon: -3.7038,  utc: 1 },
+};
+
+const SIGNS = [
+  { name:'Aries', glyph:'♈', blurb:'Suele llegar al mundo con el impulso por delante: reacciona antes de pensarlo, se lanza primero y pregunta después. Puede parecer un niño impaciente o intenso, cuando en realidad está mostrando una necesidad genuina de actuar y de sentirse capaz por sí mismo.' },
+  { name:'Tauro', glyph:'♉', blurb:'Se presenta con calma, con un ritmo propio que no le gusta que le apuren. Busca lo conocido, lo que puede tocar y sostener, y necesita tiempo para adaptarse a lo nuevo. Su primera impresión suele ser de estabilidad, aunque por dentro valore mucho la seguridad afectiva.' },
+  { name:'Géminis', glyph:'♊', blurb:'Se muestra curioso, conversador, con la mente saltando de un tema a otro. Observa todo, pregunta todo, y se conecta con el mundo a través de las palabras y el intercambio. Puede parecer disperso cuando en realidad está procesando muchísima información a la vez.' },
+  { name:'Cáncer', glyph:'♋', blurb:'Su primer gesto suele ser de cuidado y cautela: mide el ambiente emocional antes de soltarse. Es sensible a los estados de ánimo de quienes lo rodean y necesita sentirse en un espacio seguro para mostrarse tal como es, sin máscaras.' },
+  { name:'Leo', glyph:'♌', blurb:'Llega con presencia: le gusta ser visto y sentir que su expresión importa. Puede mostrarse seguro, expresivo, incluso dramático en su forma de contar lo que le pasa. Debajo de ese brillo suele haber un deseo profundo de ser reconocido por lo que es.' },
+  { name:'Virgo', glyph:'♍', blurb:'Se presenta observador y atento al detalle, casi como si estuviera evaluando cómo hacer las cosas bien. Puede parecer un niño exigente consigo mismo desde temprano, y agradece que se le reconozca el esfuerzo más que el resultado.' },
+  { name:'Libra', glyph:'♎', blurb:'Busca armonía desde el primer contacto: sonríe, media, evita el conflicto. Es sensible a la belleza y al equilibrio en su entorno, y puede costarle tomar decisiones cuando siente que alguien podría quedar en desventaja.' },
+  { name:'Escorpio', glyph:'♏', blurb:'Se muestra con una intensidad callada: observa antes de confiar, y cuando confía, lo hace profundamente. No le gusta lo superficial ni sentirse expuesto, así que su primera impresión puede ser reservada aunque por dentro sienta con mucha fuerza.' },
+  { name:'Sagitario', glyph:'♐', blurb:'Llega con entusiasmo y ganas de explorar, con una honestidad muy directa en lo que dice y siente. Necesita espacio para moverse y descubrir por su cuenta, y puede sentirse encerrado si el entorno es demasiado rígido.' },
+  { name:'Capricornio', glyph:'♑', blurb:'Se presenta con una seriedad que a veces sorprende en un niño: responsable, contenido, con ganas de hacer las cosas bien desde pequeño. Vale la pena recordarle que también tiene permiso de jugar y de no tener todo bajo control.' },
+  { name:'Acuario', glyph:'♒', blurb:'Se muestra distinto, con ideas propias y poca necesidad de encajar solo por encajar. Observa el mundo con cierta distancia curiosa y valora mucho su independencia, aunque también necesita sentirse parte de un grupo que lo acepte tal cual es.' },
+  { name:'Piscis', glyph:'♓', blurb:'Llega con una sensibilidad muy porosa: absorbe lo que siente el entorno como si fuera propio. Puede parecer soñador o disperso, cuando en realidad está procesando el mundo desde la emoción y la imaginación antes que desde la lógica.' },
+];
+
+const citySelect = document.getElementById('citySelect');
+const manualFields = document.getElementById('manualFields');
+citySelect.addEventListener('change', () => {
+  manualFields.classList.toggle('show', citySelect.value === 'otra');
+});
+
+function toJulianDay(Y, M, D, hourUT){
+  if (M <= 2){ Y -= 1; M += 12; }
+  const A = Math.floor(Y/100);
+  const B = 2 - A + Math.floor(A/4);
+  return Math.floor(365.25*(Y+4716)) + Math.floor(30.6001*(M+1)) + D + hourUT/24 + B - 1524.5;
+}
+
+function normalize360(deg){
+  let d = deg % 360;
+  if (d < 0) d += 360;
+  return d;
+}
+
+function calculateAscendant(y, m, d, hour, min, lat, lon, utcOffset){
+  const localHour = hour + min/60;
+  const utHour = localHour - utcOffset;
+  // handle day rollover from timezone shift
+  let jd = toJulianDay(y, m, d, utHour);
+
+  const T = (jd - 2451545.0) / 36525;
+  let gmst = 280.46061837 + 360.98564736629*(jd - 2451545.0) + 0.000387933*T*T - (T*T*T)/38710000;
+  gmst = normalize360(gmst);
+
+  let lst = normalize360(gmst + lon); // east longitude positive
+  const eps = 23.4392911; // obliquity of the ecliptic, degrees
+
+  const toRad = x => x * Math.PI/180;
+  const toDeg = x => x * 180/Math.PI;
+
+  const lstR = toRad(lst);
+  const latR = toRad(lat);
+  const epsR = toRad(eps);
+
+  let ascR = Math.atan2(
+    Math.cos(lstR),
+    -(Math.sin(lstR)*Math.cos(epsR) + Math.tan(latR)*Math.sin(epsR))
+  );
+  let ascDeg = normalize360(toDeg(ascR));
+  return ascDeg;
+}
+
+document.getElementById('calcBtn').addEventListener('click', () => {
+  const errorEl = document.getElementById('errorMsg');
+  errorEl.style.display = 'none';
+
+  const dateVal = document.getElementById('birthDate').value;
+  const timeVal = document.getElementById('birthTime').value;
+  const cityKey = citySelect.value;
+  const childName = document.getElementById('childName').value.trim();
+
+  let lat, lon, utc;
+  if (cityKey === 'otra') {
+    lat = parseFloat(document.getElementById('manualLat').value);
+    lon = parseFloat(document.getElementById('manualLon').value);
+    utc = parseFloat(document.getElementById('manualUtc').value);
+  } else if (cityKey && CITIES[cityKey]) {
+    ({ lat, lon, utc } = CITIES[cityKey]);
+  }
+
+  if (!dateVal || !timeVal || lat === undefined || isNaN(lat) || lon === undefined || isNaN(lon) || utc === undefined || isNaN(utc)) {
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const [y, m, d] = dateVal.split('-').map(Number);
+  const [hh, mm] = timeVal.split(':').map(Number);
+
+  const ascDeg = calculateAscendant(y, m, d, hh, mm, lat, lon, utc);
+  const signIndex = Math.floor(ascDeg / 30);
+  const degreeInSign = (ascDeg % 30).toFixed(1);
+  const sign = SIGNS[signIndex];
+
+  document.getElementById('resGlyph').textContent = sign.glyph;
+  document.getElementById('resFor').textContent = childName ? `Ascendente de ${childName}` : 'Su ascendente';
+  document.getElementById('resSign').textContent = `Ascendente en ${sign.name}`;
+  document.getElementById('resBlurb').textContent = sign.blurb;
+  document.getElementById('resDegree').textContent = `${degreeInSign}° de ${sign.name}`;
+
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'block';
+  resultEl.querySelector('.reveal').style.animation = 'none';
+  void resultEl.offsetWidth;
+  resultEl.querySelector('.reveal').style.animation = null;
+  resultEl.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+</script>
+
+</body>
+</html>
